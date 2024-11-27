@@ -1,49 +1,89 @@
--- Créateur de fenêtre basique
-local function CreateWindow(options)
-    -- Vérifie les options
-    options = options or {}
-    local windowName = options.Name or "Default Window"
-    local theme = options.Theme or "Default"
-
-    -- Crée le ScreenGui (interface principale)
+-- Créer la fenêtre principale
+-- Créer la fenêtre principale
+local function CreateWindow()
     local gui = Instance.new("ScreenGui")
-    gui.Name = windowName
-    gui.ResetOnSpawn = false
-    gui.Parent = game.CoreGui -- Assure que l'interface est visible dans le jeu
+    gui.Name = "Soraka Hub"
+    gui.Parent = game.CoreGui
 
-    -- Crée le cadre principal
+    -- Créer le cadre principal de la fenêtre
     local mainFrame = Instance.new("Frame")
-    mainFrame.Size = UDim2.new(0.3, 0, 0.4, 0)
+    mainFrame.Size = UDim2.new(0.3, 0, 0.4, 0)  -- Taille ajustée
     mainFrame.Position = UDim2.new(0.35, 0, 0.3, 0)
     mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     mainFrame.BorderSizePixel = 0
     mainFrame.Parent = gui
+    mainFrame.ClipsDescendants = true  -- Assure que tout est contenu dans la fenêtre
 
-    -- Ajoute un titre
-    local title = Instance.new("TextLabel")
-    title.Text = windowName
-    title.Font = Enum.Font.GothamBold
-    title.TextSize = 20
-    title.Size = UDim2.new(1, 0, 0.1, 0)
-    title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.Parent = mainFrame
+    -- Ajouter des coins arrondis à la fenêtre principale
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi
+    corner.Parent = mainFrame
 
-    -- Retourne l'interface principale pour y ajouter des widgets
+    -- Ajouter un titre
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = "Soraka Hub"  -- Texte que tu veux afficher
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 20
+    titleLabel.Size = UDim2.new(1, 0, 0.1, 0)  -- Taille du texte, occupe toute la largeur
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Couleur du texte
+    titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)  -- Couleur du fond
+    titleLabel.Parent = mainFrame
+
+    -- Ajouter un padding pour décaler le texte de 20 pixels à droite
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 20)  -- Décalage de 20 pixels à gauche pour le texte
+    padding.Parent = titleLabel
+
+    -- Aligner le texte à gauche à l'intérieur de son conteneur
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Ajouter des coins arrondis à la boîte du titre
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour la boîte du titre
+    titleCorner.Parent = titleLabel
+
     return mainFrame
 end
 
--- Fonction pour ajouter des boutons
+-- Créer le bouton de fermeture (X)
+local function AddCloseButton(parent, onCloseCallback)
+    local closeButton = Instance.new("TextButton")
+    closeButton.Text = "X"
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.TextSize = 20
+    closeButton.Size = UDim2.new(0, 30, 0, 30)
+    closeButton.Position = UDim2.new(1, -40, 0, 4)  -- Positionné en haut à droite
+    closeButton.BackgroundTransparency = 1  -- Aucun fond, juste la croix
+    closeButton.TextColor3 = Color3.fromRGB(169, 169, 169)  -- Couleur gris pour le X
+    closeButton.Parent = parent
+
+    -- Appliquer un coin arrondi au bouton de fermeture
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour le bouton
+    corner.Parent = closeButton
+
+    closeButton.MouseButton1Click:Connect(function()
+        onCloseCallback()
+        parent.Parent:Destroy()  -- Ferme la fenêtre principale
+    end)
+end
+
+-- Créer un bouton supplémentaire
 local function AddButton(parent, text, callback)
     local button = Instance.new("TextButton")
     button.Text = text
     button.Font = Enum.Font.Gotham
     button.TextSize = 16
     button.Size = UDim2.new(0.8, 0, 0.1, 0)
-    button.Position = UDim2.new(0.1, 0, 0.2, 0) -- Change si nécessaire
+    button.Position = UDim2.new(0.1, 0, 0.3, 0)  -- Position du bouton
     button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Parent = parent
+
+    -- Appliquer un coin arrondi au bouton
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour le bouton
+    corner.Parent = button
 
     button.MouseButton1Click:Connect(function()
         if callback then
@@ -54,15 +94,66 @@ local function AddButton(parent, text, callback)
     return button
 end
 
--- Utilisation du script
+-- Créer la fenêtre de validation
+local function CreateValidationWindow(onCancel)
+    local validationWindow = CreateWindow()
+    validationWindow.Size = UDim2.new(0.3, 0, 0.15, 0)  -- Fenêtre plus petite pour la validation
 
--- Créer une fenêtre
-local myWindow = CreateWindow({
-    Name = "Soraka HUB | Universal",
-    Theme = "Default"
-})
+    -- Ajouter des coins arrondis à la fenêtre de validation
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour la validation
+    corner.Parent = validationWindow
 
--- Ajouter un bouton pour augmenter la vitesse
+    -- Ajouter un texte de validation
+    local validationText = Instance.new("TextLabel")
+    validationText.Text = "Voulez-vous vraiment continuer ?"
+    validationText.Font = Enum.Font.GothamBold
+    validationText.TextSize = 16
+    validationText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    validationText.Size = UDim2.new(1, 0, 0.5, 0)  -- Texte ajusté pour être plus petit
+    validationText.Position = UDim2.new(0, 0, 0.2, 0)
+    validationText.BackgroundTransparency = 1
+    validationText.Parent = validationWindow
+
+    -- Ajouter un bouton pour valider
+    local validateButton = AddButton(validationWindow, "Oui, valider", function()
+        print("Choix validé !")
+        validationWindow.Parent:Destroy()  -- Ferme la fenêtre de validation
+    end)
+
+    -- Ajouter un bouton pour annuler
+    local cancelButton = AddButton(validationWindow, "Non, annuler", function()
+        print("Choix annulé !")
+        validationWindow.Parent:Destroy()  -- Ferme la fenêtre de validation
+        -- Réouvrir la fenêtre principale
+        local mainWindow = CreateWindow()
+        AddCloseButton(mainWindow, function()
+            -- Lorsque l'utilisateur ferme la fenêtre principale, créer la fenêtre de validation
+            CreateValidationWindow()
+        end)
+        AddButton(mainWindow, "Augmenter la vitesse", function()
+            local player = game.Players.LocalPlayer
+            local character = player.Character or player.CharacterAdded:Wait()
+            local humanoid = character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = humanoid.WalkSpeed + 10
+                print("Vitesse augmentée !")
+            end
+        end)
+    end)
+    cancelButton.Position = UDim2.new(0.1, 0, 0.6, 0)  -- Placer le bouton "Annuler" plus bas
+end
+
+-- Créer la fenêtre principale
+local myWindow = CreateWindow()
+
+-- Ajouter le bouton de fermeture (X gris)
+AddCloseButton(myWindow, function()
+    -- Lorsque l'utilisateur ferme la fenêtre principale, créer la fenêtre de validation
+    CreateValidationWindow(function() end)
+end)
+
+-- Ajouter un bouton "Augmenter la vitesse"
 AddButton(myWindow, "Augmenter la vitesse", function()
     local player = game.Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
@@ -71,9 +162,4 @@ AddButton(myWindow, "Augmenter la vitesse", function()
         humanoid.WalkSpeed = humanoid.WalkSpeed + 10
         print("Vitesse augmentée !")
     end
-end)
-
--- Ajouter un bouton pour fermer la fenêtre
-AddButton(myWindow, "Fermer la fenêtre", function()
-    myWindow.Parent:Destroy()
 end)
