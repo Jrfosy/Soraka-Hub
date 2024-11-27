@@ -1,1 +1,79 @@
-print("Ceci est un script hébergé sur GitHub")
+-- Créateur de fenêtre basique
+local function CreateWindow(options)
+    -- Vérifie les options
+    options = options or {}
+    local windowName = options.Name or "Default Window"
+    local theme = options.Theme or "Default"
+
+    -- Crée le ScreenGui (interface principale)
+    local gui = Instance.new("ScreenGui")
+    gui.Name = windowName
+    gui.ResetOnSpawn = false
+    gui.Parent = game.CoreGui -- Assure que l'interface est visible dans le jeu
+
+    -- Crée le cadre principal
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0.3, 0, 0.4, 0)
+    mainFrame.Position = UDim2.new(0.35, 0, 0.3, 0)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Parent = gui
+
+    -- Ajoute un titre
+    local title = Instance.new("TextLabel")
+    title.Text = windowName
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 20
+    title.Size = UDim2.new(1, 0, 0.1, 0)
+    title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Parent = mainFrame
+
+    -- Retourne l'interface principale pour y ajouter des widgets
+    return mainFrame
+end
+
+-- Fonction pour ajouter des boutons
+local function AddButton(parent, text, callback)
+    local button = Instance.new("TextButton")
+    button.Text = text
+    button.Font = Enum.Font.Gotham
+    button.TextSize = 16
+    button.Size = UDim2.new(0.8, 0, 0.1, 0)
+    button.Position = UDim2.new(0.1, 0, 0.2, 0) -- Change si nécessaire
+    button.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Parent = parent
+
+    button.MouseButton1Click:Connect(function()
+        if callback then
+            callback()
+        end
+    end)
+
+    return button
+end
+
+-- Utilisation du script
+
+-- Créer une fenêtre
+local myWindow = CreateWindow({
+    Name = "Soraka HUB | Universal",
+    Theme = "Default"
+})
+
+-- Ajouter un bouton pour augmenter la vitesse
+AddButton(myWindow, "Augmenter la vitesse", function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = humanoid.WalkSpeed + 10
+        print("Vitesse augmentée !")
+    end
+end)
+
+-- Ajouter un bouton pour fermer la fenêtre
+AddButton(myWindow, "Fermer la fenêtre", function()
+    myWindow.Parent:Destroy()
+end)
