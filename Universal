@@ -1,7 +1,7 @@
 -- Créer la fenêtre principale
 local function CreateWindow()
     local gui = Instance.new("ScreenGui")
-    gui.Name = "Soraka Hub"
+    gui.Name = "🌷  Soraka Hub | Universal"
     gui.Parent = game.CoreGui
 
     -- Créer le cadre principal de la fenêtre
@@ -20,9 +20,9 @@ local function CreateWindow()
 
     -- Ajouter un titre
     local titleLabel = Instance.new("TextLabel")
-    titleLabel.Text = "Soraka Hub"  -- Texte que tu veux afficher
+    titleLabel.Text = "🌷  Soraka Hub | Universal"  -- Texte que tu veux afficher
     titleLabel.Font = Enum.Font.GothamBold
-    titleLabel.TextSize = 20
+    titleLabel.TextSize = 20  -- Taille du texte originale
     titleLabel.Size = UDim2.new(1, 0, 0.1, 0)  -- Taille du texte, occupe toute la largeur
     titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- Couleur du texte
     titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)  -- Couleur du fond
@@ -96,33 +96,60 @@ end
 -- Créer la fenêtre de validation
 local function CreateValidationWindow(onCancel)
     local validationWindow = CreateWindow()
-    validationWindow.Size = UDim2.new(0.3, 0, 0.15, 0)  -- Fenêtre plus petite pour la validation
+    -- Ajuster la taille pour qu'elle soit plus petite
+    validationWindow.Size = UDim2.new(0.2, 0, 0.15, 0)  -- Taille réduite pour la validation
 
-    -- Ajouter des coins arrondis à la fenêtre de validation
     local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour la validation
+    corner.CornerRadius = UDim.new(0, 12)
     corner.Parent = validationWindow
+    
+    validationWindow.Position = UDim2.new(0.5, 0, 0.5, 0)
+    validationWindow.AnchorPoint = Vector2.new(0.5, 0.5)
+    validationWindow:TweenPosition(UDim2.new(0.5, 0, 0.5, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Sine, 0.3, true)
 
     -- Ajouter un texte de validation
     local validationText = Instance.new("TextLabel")
-    validationText.Text = "Voulez-vous vraiment continuer ?"
+    validationText.Text = "Do you really want to continue?"
     validationText.Font = Enum.Font.GothamBold
-    validationText.TextSize = 16
+    validationText.TextSize = 18
     validationText.TextColor3 = Color3.fromRGB(255, 255, 255)
     validationText.Size = UDim2.new(1, 0, 0.5, 0)  -- Texte ajusté pour être plus petit
-    validationText.Position = UDim2.new(0, 0, 0.2, 0)
+    validationText.Position = UDim2.new(0, 0, 0.15, 0)
     validationText.BackgroundTransparency = 1
     validationText.Parent = validationWindow
 
-    -- Ajouter un bouton pour valider
-    local validateButton = AddButton(validationWindow, "Oui, valider", function()
-        print("Choix validé !")
+    -- Ajouter un titre à la fenêtre de validation
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Text = "🌷  Soraka Hub | Universal"  -- Titre pour la fenêtre de validation
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextSize = 20  -- Taille du texte inchangée
+    titleLabel.Size = UDim2.new(1, 0, 0.2, 0)  -- Agrandir la boîte pour le titre
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    titleLabel.Parent = validationWindow
+
+    -- Ajouter un padding pour décaler le texte de 20 pixels à droite
+    local padding = Instance.new("UIPadding")
+    padding.PaddingLeft = UDim.new(0, 20)  -- Décalage de 20 pixels à gauche pour le texte
+    padding.Parent = titleLabel
+
+    -- Aligner le texte à gauche à l'intérieur de son conteneur
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+    -- Ajouter des coins arrondis à la boîte du titre
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 12)  -- Rayon d'arrondi pour la boîte du titre
+    titleCorner.Parent = titleLabel
+
+    -- Ajouter un bouton pour valider, avec une taille plus petite
+    local validateButton = AddButton(validationWindow, "Yes sir", function()
         validationWindow.Parent:Destroy()  -- Ferme la fenêtre de validation
     end)
+    validateButton.Size = UDim2.new(0.35, 0, 0.2, 0) -- Réduire la taille du bouton de validation
+    validateButton.Position = UDim2.new(0.1, 0, 0.55, 0)  -- Position du bouton "Oui" à gauche
 
-    -- Ajouter un bouton pour annuler
-    local cancelButton = AddButton(validationWindow, "Non, annuler", function()
-        print("Choix annulé !")
+    -- Ajouter un bouton pour annuler, avec une taille plus petite
+    local cancelButton = AddButton(validationWindow, "Nan uh", function()
         validationWindow.Parent:Destroy()  -- Ferme la fenêtre de validation
         -- Réouvrir la fenêtre principale
         local mainWindow = CreateWindow()
@@ -130,17 +157,9 @@ local function CreateValidationWindow(onCancel)
             -- Lorsque l'utilisateur ferme la fenêtre principale, créer la fenêtre de validation
             CreateValidationWindow()
         end)
-        AddButton(mainWindow, "Augmenter la vitesse", function()
-            local player = game.Players.LocalPlayer
-            local character = player.Character or player.CharacterAdded:Wait()
-            local humanoid = character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid.WalkSpeed = humanoid.WalkSpeed + 10
-                print("Vitesse augmentée !")
-            end
-        end)
     end)
-    cancelButton.Position = UDim2.new(0.1, 0, 0.6, 0)  -- Placer le bouton "Annuler" plus bas
+    cancelButton.Size = UDim2.new(0.35, 0, 0.2, 0)  -- Réduire la taille du bouton d'annulation
+    cancelButton.Position = UDim2.new(0.5, 0, 0.55, 0)  -- Position du bouton "Non" à droite
 end
 
 -- Créer la fenêtre principale
@@ -150,15 +169,4 @@ local myWindow = CreateWindow()
 AddCloseButton(myWindow, function()
     -- Lorsque l'utilisateur ferme la fenêtre principale, créer la fenêtre de validation
     CreateValidationWindow(function() end)
-end)
-
--- Ajouter un bouton "Augmenter la vitesse"
-AddButton(myWindow, "Augmenter la vitesse", function()
-    local player = game.Players.LocalPlayer
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoid = character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = humanoid.WalkSpeed + 10
-        print("Vitesse augmentée !")
-    end
 end)
