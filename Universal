@@ -1,5 +1,4 @@
 -- Créer la fenêtre principale
--- Créer la fenêtre principale
 local function CreateWindow()
     local gui = Instance.new("ScreenGui")
     gui.Name = "Soraka Hub"
